@@ -1,13 +1,9 @@
 .container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
-.title a {
+/* .title a {
   color: #0070f3;
   text-decoration: none;
 }
@@ -88,4 +84,4 @@
     width: 100%;
     flex-direction: column;
   }
-}
+} */

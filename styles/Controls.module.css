@@ -1,0 +1,35 @@
+.search-container {
+    width: 20%;
+    padding: 1rem;
+    background-color: #14161a;
+    color: #fff;
+}
+
+
+.combobox-input {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+
+.neighborhood {
+    margin-top: 1.5rem;
+    min-height: 6rem;
+}
+
+.title {
+    margin-bottom: .5rem;
+}
+
+
+.distance {
+    /* min-height: 14rem; */
+}
+
+
+.compute {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    cursor: pointer;
+}
