@@ -36,14 +36,18 @@ export default function handler(req, res) {
                 }
                 const savedApartments = JSON.parse(fileContent)
                 const idx = savedApartments.findIndex(({ lat, lng }) => lat === newApartment.lat && lng === newApartment.lng)
+
+                let action
                 if (idx === -1) {
+                    action = 'add'
                     savedApartments.push(newApartment)
                 } else {
+                    action = 'remove'
                     // delete savedApartments[idx]
                     savedApartments.splice(idx, 1)
                 }
                 fs.writeFileSync(filePath, JSON.stringify(savedApartments))
-                res.status(200).json("OK")
+                res.status(200).json(`${action} success`)
                 break
         }
     } catch (e) {

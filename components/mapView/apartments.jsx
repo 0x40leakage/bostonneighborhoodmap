@@ -3,7 +3,7 @@ import { Marker, DistanceMatrixService } from '@react-google-maps/api';
 
 import { iconURLs, apis, doubleClickThreshold, cancellablePromise, delay } from '../../utils';
 
-export default function Apartments({ destination, setOriginPosition, planRoutes, trigger, updateTrigger }) {
+export default function Apartments({ destination, setOriginPosition, planRoutes, trigger, updateTrigger, setFetchedDirections }) {
     const cb = (result, status) => {
         console.log(result, status)
     }
@@ -33,7 +33,7 @@ export default function Apartments({ destination, setOriginPosition, planRoutes,
     let clickTimer
     // save location
     const handleDbClick = e => {
-        console.log('dbclick')
+        // console.log('dbclick')
         clearTimeout(clickTimer)
         // console.log('click', e, e.domEvent.type, e.latLng.lat(), e.latLng.lng())
         const { address, lat, lng } = apartments.find(apartment => apartment.lat === e.latLng.lat() && apartment.lng === e.latLng.lng())
@@ -47,8 +47,12 @@ export default function Apartments({ destination, setOriginPosition, planRoutes,
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                // console.log(data, typeof data)
                 updateTrigger()
+                if (data.includes("remove")) {
+                    // don't render direction
+                    setFetchedDirections(null)
+                }
             })
             .catch(err => {
                 console.log(`save apartment error: ${err.message}`)
@@ -57,11 +61,13 @@ export default function Apartments({ destination, setOriginPosition, planRoutes,
 
     // show direction
     const handleClick = e => {
-        console.log('click')
+        // console.log('click')
         clickTimer = setTimeout(() => {
+
             // console.log('click', e, e.domEvent.type, e.latLng.lat(), e.latLng.lng())
             setOriginPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() })
             planRoutes()
+
         }, doubleClickThreshold)
         e.stop()
     }

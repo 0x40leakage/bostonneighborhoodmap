@@ -37,8 +37,4 @@ npm run dev
 # icons
 # https://sites.google.com/site/gmapsdevelopment/
 # https://www.google.com/maps/d/u/0/viewer?mid=1icXjgXJ5da1l2BQjMNgXAI4dlkw&hl=en_US&ll=-0.007000851535815176%2C0.00300017029951416&z=16
-
-
-
-# https://medium.com/trabe/prevent-click-events-on-double-click-with-react-with-and-without-hooks-6bf3697abc40
 ```

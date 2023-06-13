@@ -29,8 +29,12 @@ const apis = {
 }
 
 // the two clicks of a double click should be within 300ms
-const doubleClickThreshold = 3000; // ms
+const doubleClickThreshold = 1500; // ms
 
+// https://medium.com/trabe/prevent-click-events-on-double-click-with-react-with-and-without-hooks-6bf3697abc40
+// https://medium.com/trabe/preventing-click-events-on-double-click-with-react-the-performant-way-1416ab03b835
+
+// FIX: clearTimeout not working
 const cancellablePromise = promise => {
     let isCanceled = false;
 

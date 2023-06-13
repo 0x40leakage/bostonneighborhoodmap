@@ -12,6 +12,7 @@ import { mapID, bostonNeighborhoodDatasetID, defaultCenter, defaultZoom, iconURL
 export default function MapView({ originPosition, setOriginPosition, setNeighborhoodData, setDirections, routeIndex }) {
     const [routeServiceFinished, setRouteServiceFinished] = useState(true)
     const [trigger, setTrigger] = useState({})
+    const [fetchedDirections, setFetchedDirections] = useState(null)
 
     const handleMapLoaded = useCallback(map => {
         mapRef.current = map
@@ -38,7 +39,7 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
     let clickTimer
     // save location
     const handleDbClick = () => {
-        console.log('dbclick')
+        // console.log('dbclick')
         clearTimeout(clickTimer)
         const { address, lat, lng } = originPosition
         // POST to server
@@ -51,8 +52,9 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                // console.log(data, typeof data)
                 setTrigger({})
+                setOriginPosition(null)
             })
             .catch(err => {
                 console.log(`save apartment error: ${err.message}`)
@@ -61,9 +63,11 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
 
     // show direction
     const handleClick = e => {
-        console.log('click')
+        // console.log('click')
         clickTimer = setTimeout(() => {
+
             setRouteServiceFinished(false) // reset
+
         }, doubleClickThreshold)
         e.stop()
     }
@@ -95,6 +99,8 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
                     setDirections={setDirections}
                     routeIndex={routeIndex}
                     updateTrigger={() => setTrigger({})}
+                    fetchedDirections={fetchedDirections}
+                    setFetchedDirections={setFetchedDirections}
                 />
 
                 <Apartments
@@ -103,6 +109,7 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
                     planRoutes={() => setRouteServiceFinished(false)}
                     trigger={trigger}
                     updateTrigger={() => setTrigger({})}
+                    setFetchedDirections={setFetchedDirections}
                 />
 
                 <Center center={office} />
