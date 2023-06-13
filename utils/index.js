@@ -5,12 +5,9 @@ const mapID = process.env.NEXT_PUBLIC_GOOGLE_MAP_ID
 const bostonNeighborhoodDatasetID = "7496f418-c5bf-47ef-a33d-0df81d111800"
 
 const defaultCenter = {
-    coordinate: {
-        lat: 42.339077666543396,
-        lng: -71.10319912623676,
-    },
-    name: 'Harvard Medical School',
-    cnName: '哈佛医学院',
+    lat: 42.339077666543396,
+    lng: -71.10319912623676,
+    address: 'Harvard Medical School, Shattuck Street, Boston',
 }
 
 const defaultZoom = 13;
@@ -31,4 +28,25 @@ const apis = {
     apartment: 'api/apartment'
 }
 
-export { apiKey, mapID, bostonNeighborhoodDatasetID, defaultCenter, defaultZoom, distance, iconURLs, apis }
+// the two clicks of a double click should be within 300ms
+const doubleClickThreshold = 3000; // ms
+
+const cancellablePromise = promise => {
+    let isCanceled = false;
+
+    const wrappedPromise = new Promise((resolve, reject) => {
+        promise.then(
+            value => (isCanceled ? reject({ isCanceled, value }) : resolve(value)),
+            error => reject({ isCanceled, error }),
+        );
+    });
+
+    return {
+        promise: wrappedPromise,
+        cancel: () => (isCanceled = true),
+    };
+};
+
+const delay = n => new Promise(resolve => setTimeout(resolve, n));
+
+export { apiKey, mapID, bostonNeighborhoodDatasetID, defaultCenter, defaultZoom, distance, iconURLs, apis, doubleClickThreshold, cancellablePromise, delay }

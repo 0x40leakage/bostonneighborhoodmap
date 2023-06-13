@@ -10,6 +10,7 @@ export default function Center({ center }) {
             <Marker
                 position={center}
                 icon={iconURLs.office}
+                title={center.address}
             />
 
             <Circle center={center} radius={close} options={closeCircleOptions} />

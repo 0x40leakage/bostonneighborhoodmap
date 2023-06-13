@@ -23,7 +23,7 @@ export default function Places({ setOriginPosition }) {
 
         const results = await getGeocode({ address })
         const { lat, lng } = await getLatLng(results[0])
-        setOriginPosition({ lat, lng })
+        setOriginPosition({ lat, lng, address })
     }
 
     return (

@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 const filePath = "./pages/api/apartment.json"
-const allowedMethods = ['GET', 'POST', 'DELETE'];
+const allowedMethods = ['GET', 'POST'];
 
 export default function handler(req, res) {
     if (req.method in allowedMethods) {
@@ -18,11 +18,32 @@ export default function handler(req, res) {
                 const data = fs.readFileSync(filePath, {
                     encoding: 'utf-8'
                 });
-                res.status(200).json(JSON.parse(data));
+                if (data) {
+                    const apartments = JSON.parse(data)
+                    console.log('apartments', apartments.length)
+                    res.status(200).json(apartments);
+                } else {
+                    res.status(200).json([]);
+                }
                 break
             case 'POST':
-                break
-            case 'DELETE':
+                const newApartment = req.body
+                let fileContent = fs.readFileSync(filePath, {
+                    encoding: 'utf-8',
+                })
+                if (!fileContent) {
+                    fileContent = "[]"
+                }
+                const savedApartments = JSON.parse(fileContent)
+                const idx = savedApartments.findIndex(({ lat, lng }) => lat === newApartment.lat && lng === newApartment.lng)
+                if (idx === -1) {
+                    savedApartments.push(newApartment)
+                } else {
+                    // delete savedApartments[idx]
+                    savedApartments.splice(idx, 1)
+                }
+                fs.writeFileSync(filePath, JSON.stringify(savedApartments))
+                res.status(200).json("OK")
                 break
         }
     } catch (e) {

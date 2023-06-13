@@ -7,11 +7,11 @@ import Apartments from './apartments';
 
 import styles from '../../styles/MapView.module.css';
 
-import { mapID, bostonNeighborhoodDatasetID, defaultCenter, defaultZoom, iconURLs } from '../../utils';
+import { mapID, bostonNeighborhoodDatasetID, defaultCenter, defaultZoom, iconURLs, doubleClickThreshold, apis, cancellablePromise, delay } from '../../utils';
 
 export default function MapView({ originPosition, setOriginPosition, setNeighborhoodData, setDirections, routeIndex }) {
-    const [routeServiceFinished, setRouteServiceFinished] = useState(false)
-    const [routeServiceEnabled, setRouteServiceEnabled] = useState(false)
+    const [routeServiceFinished, setRouteServiceFinished] = useState(true)
+    const [trigger, setTrigger] = useState({})
 
     const handleMapLoaded = useCallback(map => {
         mapRef.current = map
@@ -19,7 +19,7 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
     }, [])
 
     const mapRef = useRef()
-    const office = useMemo(() => defaultCenter.coordinate, [])
+    const office = useMemo(() => defaultCenter, [])
     const options = useMemo(
         () => ({
             mapId: mapID,
@@ -35,10 +35,37 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
         }
     }, [originPosition])
 
-    const planRoutes = () => {
-        setRouteServiceFinished(false) // reset
+    let clickTimer
+    // save location
+    const handleDbClick = () => {
+        console.log('dbclick')
+        clearTimeout(clickTimer)
+        const { address, lat, lng } = originPosition
+        // POST to server
+        fetch(apis.apartment, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ address, lat, lng })
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setTrigger({})
+            })
+            .catch(err => {
+                console.log(`save apartment error: ${err.message}`)
+            })
+    }
 
-        setRouteServiceEnabled(true)
+    // show direction
+    const handleClick = e => {
+        console.log('click')
+        clickTimer = setTimeout(() => {
+            setRouteServiceFinished(false) // reset
+        }, doubleClickThreshold)
+        e.stop()
     }
 
     return (
@@ -51,24 +78,31 @@ export default function MapView({ originPosition, setOriginPosition, setNeighbor
                 options={options}
             >
                 {/* mark searched position on the map */}
-                {originPosition && <Marker
+                {originPosition && originPosition.address && <Marker
                     position={originPosition}
+                    // TODO: CHANGE ICON AFTER SAVED
                     icon={iconURLs.searchedPosition}
-                    onClick={planRoutes}
+                    onClick={handleClick}
+                    onDblClick={handleDbClick}
+                    title={originPosition.address}
                 />}
 
-                {routeServiceEnabled && <RouteService
+                <RouteService
                     origin={originPosition}
                     destination={office}
                     routeServiceFinished={routeServiceFinished}
                     setRouteServiceFinished={setRouteServiceFinished}
                     setDirections={setDirections}
                     routeIndex={routeIndex}
-                />}
+                    updateTrigger={() => setTrigger({})}
+                />
 
                 <Apartments
                     destination={office}
                     setOriginPosition={setOriginPosition}
+                    planRoutes={() => setRouteServiceFinished(false)}
+                    trigger={trigger}
+                    updateTrigger={() => setTrigger({})}
                 />
 
                 <Center center={office} />

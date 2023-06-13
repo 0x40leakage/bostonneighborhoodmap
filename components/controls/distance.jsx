@@ -29,8 +29,7 @@ export default function Distance({ directions, setRouteIndex }) {
 }
 
 const summarizeRoute = route => {
-    // FIX: check null
-    const cost = `${route.legs[0].distance.text}, ${route.fare.text}, ${route.legs[0].duration.text}`
+    const cost = `${route.legs[0].distance.text}, ${route.fare ? route.fare.text + ',' : ''} ${route.legs[0].duration.text}`
     return {
         cost
     }

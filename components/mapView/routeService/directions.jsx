@@ -13,6 +13,7 @@ export default function Directions({ origin, destination, setFetchedDirections, 
     const cb = (result, status) => {
         // console.log(result, status)
         if (status === google.maps.DirectionsStatus.OK && result) {
+            console.log(`number of routes: ${result.routes.length}`)
             setFetchedDirections(result)
             setDirectionsProp(result)
             setRouteServiceFinished(true)
