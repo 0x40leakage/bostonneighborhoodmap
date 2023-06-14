@@ -1,9 +1,16 @@
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+
+A Boston neighborhood map built with Next.js and Google Maps API.
+
+Features:
+- Show Boston neighborhoods using data driven styling.
+- Searching supports autocomplete.
+- Set a predefined location as the destination, and find public transport available between searched locations and the destination. Directions are shown on the map. You can also choose between routes.
 
 ```bash
 npm run dev
+```
 
-
+<!-- ```bash
 # https://react-google-maps-api-docs.netlify.app/
     # https://tomchentw.github.io/react-google-maps/
 # https://medium.com/scalereal/integration-of-google-maps-with-react-part-1-86c075ab452a
@@ -37,4 +44,4 @@ npm run dev
 # icons
 # https://sites.google.com/site/gmapsdevelopment/
 # https://www.google.com/maps/d/u/0/viewer?mid=1icXjgXJ5da1l2BQjMNgXAI4dlkw&hl=en_US&ll=-0.007000851535815176%2C0.00300017029951416&z=16
-```
+``` -->
